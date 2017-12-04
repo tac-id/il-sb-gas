@@ -20,21 +20,25 @@ function triggerNoticeActionCheckAndExec() {
   // 当日の営業日何日目かを取得
   var today = new Date();
   var busToday = getDaysOfBusinessDays(today);
-  
-  // 実行する通知があれば実行
-  var act;
-  var nextMonth;
-  var subject;
-  for (var i = 0, iMax = noticeActArray.length; i < iMax; i++) {
-    act = noticeActArray[i];
-    if (act.TriggerDay == busToday) {
-      // 翌月を取得
-      nextMonth = addDateTime(today, 'month', 1).getMonth() + 1;
-      // 件名
-      subject = act.Subject.replace(/<%m%>/g, nextMonth);
-      // 通知
-      //sendNoticeMail(act.ToList, subject, act.Body, act.CcList);
-      sendNoticeMail(null, subject, act.Body, null);
+  var isBusday = isBusinessDay(today);
+
+  // 営業日のみ実行  
+  if (isBusday) {
+    // 実行する通知があれば実行
+    var act;
+    var nextMonth;
+    var subject;
+    for (var i = 0, iMax = noticeActArray.length; i < iMax; i++) {
+      act = noticeActArray[i];
+      if (act.TriggerDay == busToday) {
+        // 翌月を取得
+        nextMonth = addDateTime(today, 'month', 1).getMonth() + 1;
+        // 件名
+        subject = act.Subject.replace(/<%m%>/g, nextMonth);
+        // 通知
+        //sendNoticeMail(act.ToList, subject, act.Body, act.CcList);
+        sendNoticeMail(null, subject, act.Body, null);
+      }
     }
   }
 }
